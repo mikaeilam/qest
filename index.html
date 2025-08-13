@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نرم افزار مدیریت اقساط پیشرفته</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@6.9.96/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/sahel-font@v3.4.0/dist/font-face.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="mdi mdi-cash-multiple"></i>
+                <span>مدیریت اقساط</span>
+            </div>
+            <nav>
+                <ul>
+                    <li class="active"><a href="#"><i class="mdi mdi-view-dashboard"></i> داشبورد</a></li>
+                    <li><a href="#"><i class="mdi mdi-plus-circle"></i> افزودن قسط</a></li>
+                    <li><a href="#"><i class="mdi mdi-calendar-clock"></i> سررسیدها</a></li>
+                    <li><a href="#"><i class="mdi mdi-chart-bar"></i> گزارشات</a></li>
+                    <li><a href="#"><i class="mdi mdi-cog"></i> تنظیمات</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header>
+                <div class="header-left">
+                    <h1>داشبورد مدیریت اقساط</h1>
+                    <div class="date-display" id="current-date"></div>
+                </div>
+                <div class="header-right">
+                    <button class="btn btn-notification">
+                        <i class="mdi mdi-bell"></i>
+                        <span class="badge" id="notification-count">0</span>
+                    </button>
+                    <div class="user-profile">
+                        <img src="https://via.placeholder.com/40" alt="پروفایل کاربر">
+                    </div>
+                </div>
+            </header>
+
+            <div class="notification-bar" id="notification-bar"></div>
+
+            <div class="stats-cards">
+                <div class="stat-card total-debt">
+                    <div class="stat-icon">
+                        <i class="mdi mdi-cash-remove"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>مجموع بدهی‌ها</h3>
+                        <p id="total-debt-amount">0 ریال</p>
+                    </div>
+                </div>
+                <div class="stat-card upcoming-payments">
+                    <div class="stat-icon">
+                        <i class="mdi mdi-calendar-alert"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>قسط‌های آینده</h3>
+                        <p id="upcoming-payments-count">0 مورد</p>
+                    </div>
+                </div>
+                <div class="stat-card overdue-payments">
+                    <div class="stat-icon">
+                        <i class="mdi mdi-alert-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>معوقه‌ها</h3>
+                        <p id="overdue-payments-count">0 مورد</p>
+                    </div>
+                </div>
+                <div class="stat-card paid-payments">
+                    <div class="stat-icon">
+                        <i class="mdi mdi-cash-check"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>پرداخت شده</h3>
+                        <p id="paid-payments-count">0 مورد</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <div class="upcoming-payments-section">
+                    <h2><i class="mdi mdi-calendar-star"></i> سررسیدهای نزدیک</h2>
+                    <div class="payments-list" id="upcoming-payments-list">
+                        <!-- Upcoming payments will be added here -->
+                    </div>
+                </div>
+
+                <div class="add-payment-section">
+                    <h2><i class="mdi mdi-plus-circle"></i> افزودن قسط جدید</h2>
+                    <form id="payment-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="payment-name"><i class="mdi mdi-format-title"></i> عنوان قسط:</label>
+                                <input type="text" id="payment-name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="payment-creditor"><i class="mdi mdi-account"></i> طلبکار:</label>
+                                <input type="text" id="payment-creditor">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="payment-total-amount"><i class="mdi mdi-cash"></i> مبلغ کل:</label>
+                                <input type="number" id="payment-total-amount" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="payment-installment-count"><i class="mdi mdi-counter"></i> تعداد اقساط:</label>
+                                <input type="number" id="payment-installment-count" min="1" value="1" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label><i class="mdi mdi-calendar-multiple"></i> تاریخ‌های سررسید:</label>
+                            <div id="installment-dates-container">
+                                <!-- Installment dates will be added here -->
+                            </div>
+                            <button type="button" class="btn btn-secondary" id="generate-dates-btn">
+                                <i class="mdi mdi-calendar-plus"></i> تولید خودکار تاریخ‌ها
+                            </button>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="payment-desc"><i class="mdi mdi-text"></i> توضیحات:</label>
+                            <textarea id="payment-desc" rows="3"></textarea>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="mdi mdi-content-save"></i> ذخیره قسط
+                            </button>
+                            <button type="button" class="btn btn-secondary" id="reset-form-btn">
+                                <i class="mdi mdi-close"></i> ریست فرم
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="all-payments-section">
+                <h2><i class="mdi mdi-format-list-bulleted"></i> لیست تمام اقساط</h2>
+                <div class="filter-section">
+                    <div class="search-box">
+                        <input type="text" id="payment-search" placeholder="جستجو در اقساط...">
+                        <i class="mdi mdi-magnify"></i>
+                    </div>
+                    <div class="filter-buttons">
+                        <button class="btn filter-btn active" data-filter="all">
+                            <i class="mdi mdi-filter-variant"></i> همه
+                        </button>
+                        <button class="btn filter-btn" data-filter="upcoming">
+                            <i class="mdi mdi-calendar-clock"></i> آینده
+                        </button>
+                        <button class="btn filter-btn" data-filter="past">
+                            <i class="mdi mdi-alert"></i> معوقه
+                        </button>
+                        <button class="btn filter-btn" data-filter="paid">
+                            <i class="mdi mdi-check-circle"></i> پرداخت شده
+                        </button>
+                    </div>
+                </div>
+                <div class="payments-table-container">
+                    <table class="payments-table">
+                        <thead>
+                            <tr>
+                                <th>عنوان</th>
+                                <th>طلبکار</th>
+                                <th>مبلغ کل</th>
+                                <th>تعداد اقساط</th>
+                                <th>سررسید بعدی</th>
+                                <th>وضعیت</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="payments-table-body">
+                            <!-- Payments will be added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <!-- Date Picker Modal -->
+        <div class="modal" id="date-picker-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>انتخاب تاریخ شمسی</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="persian-date-picker" id="persian-date-picker"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary close-modal">انصراف</button>
+                    <button class="btn btn-primary" id="confirm-date-btn">تایید</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Modal -->
+        <div class="modal" id="settings-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>تنظیمات برنامه</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="settings-section">
+                        <h4><i class="mdi mdi-bell"></i> تنظیمات اعلان‌ها</h4>
+                        <div class="form-group">
+                            <label for="notification-days">اعلان قبل از سررسید (روز):</label>
+                            <input type="number" id="notification-days" min="0" max="30" value="3">
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="enable-notifications" checked>
+                                فعال کردن اعلان‌ها
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h4><i class="mdi mdi-palette"></i> تنظیمات ظاهری</h4>
+                        <div class="form-group">
+                            <label for="theme-select">تم:</label>
+                            <select id="theme-select">
+                                <option value="light">روشن</option>
+                                <option value="dark">تیره</option>
+                                <option value="blue">آبی</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="font-select">فونت:</label>
+                            <select id="font-select">
+                                <option value="vazir">وزیر</option>
+                                <option value="sahel">سپهر</option>
+                                <option value="tanha">تنها</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary close-modal">انصراف</button>
+                    <button class="btn btn-primary" id="save-settings-btn">ذخیره تنظیمات</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/persian-date@1.1.0/dist/persian-date.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
